@@ -1,0 +1,91 @@
+%-------------------------
+% Cover Letter Template — Rudramani Dhiman
+% Placeholders replaced by cover_letter_agent.py:
+%   <<DATE>>                  — e.g. "March 25, 2026"
+%   <<HIRING_MANAGER_LINE>>   — e.g. "Hiring Manager" or "Jane Smith"
+%   <<COMPANY_NAME>>          — company name
+%   <<COMPANY_LOCATION>>      — city / remote
+%   <<JOB_TITLE>>             — role being applied to
+%   <<JOB_ID_IF_AVAILABLE>>   — job ID or blank
+%   <<SALUTATION>>            — e.g. "Dear Hiring Manager"
+%   <<BODY>>                  — 4 paragraphs of plain text
+%-------------------------
+
+\documentclass[11pt]{article}
+
+\usepackage[empty]{fullpage}
+\usepackage{tgheros}
+\renewcommand*\familydefault{\sfdefault}
+\usepackage[T1]{fontenc}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fontawesome5}
+\usepackage{xcolor}
+\usepackage{parskip}
+
+\definecolor{text-grey}{gray}{.08}
+\definecolor{dark-grey}{gray}{0.3}
+\definecolor{accent-blue}{HTML}{1a5276}
+
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1.0in}
+\addtolength{\topmargin}{-0.5in}
+\addtolength{\textheight}{1.0in}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{9pt}
+
+\color{text-grey}
+
+\begin{document}
+
+%----------HEADER----------
+\begin{center}
+    \textbf{\Huge Rudramani Dhiman} \\ \vspace{6pt}
+    \small
+    \faPhone*\ \texttt{+1 (437) 450-0315}
+    \hspace{4pt}$|$\hspace{4pt}
+    \faEnvelope\ \href{mailto:rudramanidhiman@gmail.com}{\texttt{rudramanidhiman@gmail.com}}
+    \hspace{4pt}$|$\hspace{4pt}
+    \faLinkedin\ \href{https://linkedin.com/in/rudramani-dhiman}{\texttt{rudramani-dhiman}}
+    \hspace{4pt}$|$\hspace{4pt}
+    \faMapMarker*\ \texttt{Canadian}
+\end{center}
+
+\vspace{14pt}
+
+%----------DATE----------
+<<DATE>>
+
+\vspace{8pt}
+
+%----------RECIPIENT----------
+<<HIRING_MANAGER_LINE>>\\
+<<COMPANY_NAME>>\\
+<<COMPANY_LOCATION>>
+
+\vspace{8pt}
+
+%----------SUBJECT----------
+\textbf{Re: <<JOB_TITLE>>%
+\ifx\empty<<JOB_ID_IF_AVAILABLE>>\empty\else\ ---\ <<JOB_ID_IF_AVAILABLE>>\fi}
+
+\vspace{8pt}
+
+%----------SALUTATION----------
+<<SALUTATION>>,
+
+\vspace{4pt}
+
+%----------BODY----------
+<<BODY>>
+
+\vspace{12pt}
+
+%----------CLOSING----------
+Sincerely,
+
+\vspace{14pt}
+\textbf{Rudramani Dhiman}
+
+\end{document}

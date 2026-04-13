@@ -1,0 +1,175 @@
+# ═══════════════════════════════════════════════════════════════
+# Secrets & Environment — NEVER COMMIT THESE
+# ═══════════════════════════════════════════════════════════════
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+*.pem
+*.key
+secrets/
+credentials/
+api_keys.txt
+config/secrets.yaml
+
+# settings.yaml contains personal PII and may contain API keys
+# Use environment variables instead (see .env.example)
+config/settings.yaml
+
+# ═══════════════════════════════════════════════════════════════
+# Python
+# ═══════════════════════════════════════════════════════════════
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+venv/
+env/
+ENV/
+.venv/
+.virtualenv/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# ═══════════════════════════════════════════════════════════════
+# Node / Next.js
+# ═══════════════════════════════════════════════════════════════
+node_modules/
+.pnp
+.pnp.js
+.yarn/install-state.gz
+.next/
+out/
+build/
+.swc/
+.vercel
+.turbo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ═══════════════════════════════════════════════════════════════
+# Application Data — NEVER COMMIT
+# ═══════════════════════════════════════════════════════════════
+data/applications.db
+data/applications.db-journal
+data/applications.db-wal
+data/applications.db-shm
+data/job_cache.json
+data/*.sqlite
+data/*.sqlite-journal
+
+# Generated outputs
+outputs/resumes/
+outputs/cover_letters/
+outputs/reports/
+outputs/*.pdf
+outputs/*.zip
+
+# Input URL files (personal job-hunt data)
+urls.txt
+*_urls.txt
+*.urls.txt
+test_urls*.txt
+
+# Scraped data caches
+.cache/
+*.cache
+logs/
+*.log
+log/
+
+# ═══════════════════════════════════════════════════════════════
+# LaTeX intermediate files
+# ═══════════════════════════════════════════════════════════════
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+*.lb
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*-blx.bib
+*.run.xml
+*.synctex
+*.synctex.gz
+*.fdb_latexmk
+
+# ═══════════════════════════════════════════════════════════════
+# Personal / Sensitive
+# ═══════════════════════════════════════════════════════════════
+# Base resume contains personal contact info — use template instead
+data/base_resume.tex
+data/applications_export.csv
+data/personal_notes.md
+
+# ═══════════════════════════════════════════════════════════════
+# IDE / Editor
+# ═══════════════════════════════════════════════════════════════
+.vscode/
+!.vscode/settings.json.example
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.cursor/
+*.sublime-project
+*.sublime-workspace
+
+# ═══════════════════════════════════════════════════════════════
+# OS
+# ═══════════════════════════════════════════════════════════════
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+desktop.ini
+Thumbs.db
+
+# ═══════════════════════════════════════════════════════════════
+# Playwright / Browser automation
+# ═══════════════════════════════════════════════════════════════
+playwright-report/
+test-results/
+playwright/.cache/
+.browser-state/

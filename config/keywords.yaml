@@ -1,0 +1,189 @@
+# JobHunter AI — Keywords & Skill Mappings
+
+# ─── APPROVED SKILL POOL ────────────────────────────────────────────────────
+# Only skills Rudra genuinely has. Agents may inject these into resumes.
+approved_skills:
+  languages:
+    - Python
+    - TypeScript
+    - JavaScript
+    - Java
+    - Go
+    - SQL
+    - Bash
+
+  ai_ml:
+    - PyTorch
+    - TensorFlow
+    - scikit-learn
+    - NLP
+    - LLMs
+    - Agentic AI
+    - Generative AI
+    - Deep Learning
+    - RAG
+    - Embeddings
+    - Transformers
+    - Computer Vision
+    - Hugging Face
+    - OpenAI API
+    - LangChain
+    - LlamaIndex
+    - Fine-tuning
+    - RLHF
+    - Prompt Engineering
+    - Vector Databases
+    - Pinecone
+    - Chroma
+    - FAISS
+    - MLflow
+    - Weights & Biases
+    - Model Serving
+    - ONNX
+    - spaCy
+    - NLTK
+    - Sentence Transformers
+
+  cloud_devops:
+    - AWS
+    - EC2
+    - S3
+    - Lambda
+    - SageMaker
+    - Secrets Manager
+    - DigitalOcean
+    - Docker
+    - Kubernetes
+    - CI/CD
+    - Jenkins
+    - GitHub Actions
+    - RunPod Serverless
+    - GCP
+    - Terraform
+
+  tools_frameworks:
+    - FastAPI
+    - Flask
+    - Django
+    - PostgreSQL
+    - MongoDB
+    - Redis
+    - React
+    - Next.js
+    - Git
+    - Linux
+    - Nginx
+    - Celery
+    - RabbitMQ
+    - Apache Kafka
+
+# ─── SKILL ALIASES / NORMALIZATION ──────────────────────────────────────────
+# Maps common JD variants to canonical skill names
+skill_aliases:
+  "sklearn": "scikit-learn"
+  "sci-kit learn": "scikit-learn"
+  "pytorch": "PyTorch"
+  "tensorflow": "TensorFlow"
+  "tf": "TensorFlow"
+  "huggingface": "Hugging Face"
+  "hf": "Hugging Face"
+  "gpt": "OpenAI API"
+  "openai": "OpenAI API"
+  "langchain": "LangChain"
+  "llama index": "LlamaIndex"
+  "llamaindex": "LlamaIndex"
+  "llm": "LLMs"
+  "large language model": "LLMs"
+  "retrieval augmented generation": "RAG"
+  "natural language processing": "NLP"
+  "ml": "Machine Learning"
+  "mlops": "MLOps"
+  "w&b": "Weights & Biases"
+  "wandb": "Weights & Biases"
+  "k8s": "Kubernetes"
+  "gh actions": "GitHub Actions"
+  "amazon web services": "AWS"
+  "google cloud": "GCP"
+  "google cloud platform": "GCP"
+  "postgres": "PostgreSQL"
+  "mongo": "MongoDB"
+
+# ─── ROLE KEYWORDS ───────────────────────────────────────────────────────────
+# Keywords that indicate a role is in Rudra's target area
+target_role_keywords:
+  - machine learning
+  - artificial intelligence
+  - AI/ML
+  - deep learning
+  - NLP
+  - natural language processing
+  - LLM
+  - large language model
+  - generative AI
+  - gen AI
+  - MLOps
+  - applied AI
+  - data science
+  - neural network
+  - transformer
+  - pytorch
+  - tensorflow
+  - RAG
+  - agentic AI
+
+# ─── EXCLUSION KEYWORDS ──────────────────────────────────────────────────────
+# If JD contains these, auto-skip
+hard_exclusions:
+  - "PhD required"
+  - "PhD is required"
+  - "requires a PhD"
+  - "10+ years"
+  - "10 or more years"
+  - "security clearance"
+  - "US citizens only"
+  - "must be authorized to work in the US"
+  - "no sponsorship"
+
+# ─── HIGH-VALUE JD SIGNALS ───────────────────────────────────────────────────
+# Patterns that boost match score
+positive_signals:
+  remote_friendly:
+    - "fully remote"
+    - "remote-first"
+    - "work from anywhere"
+    - "remote ok"
+    - "remote position"
+  canada_friendly:
+    - "canada"
+    - "canadian"
+    - "ontario"
+    - "toronto"
+    - "gta"
+  good_fit_phrases:
+    - "production ML"
+    - "end-to-end ML"
+    - "LLM integration"
+    - "RAG pipeline"
+    - "agentic"
+    - "AI agent"
+    - "model deployment"
+    - "NLP pipeline"
+    - "fine-tuning"
+
+# ─── ATS CRITICAL TERMS ──────────────────────────────────────────────────────
+# Terms that must appear in resume if in JD (for ATS scoring)
+ats_critical:
+  - machine learning
+  - artificial intelligence
+  - Python
+  - deep learning
+  - neural network
+  - NLP
+  - LLM
+  - transformer
+  - cloud
+  - Docker
+  - API
+  - REST
+  - CI/CD
+  - agile
