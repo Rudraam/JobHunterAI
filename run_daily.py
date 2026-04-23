@@ -134,7 +134,7 @@ def cmd_single(args):
         print("[Error] --url is required")
         sys.exit(1)
     orch = _get_orchestrator()
-    orch.run_single(args.url)
+    orch.run_single(args.url, force=getattr(args, 'force', False))
 
 
 def cmd_status(args):
@@ -188,7 +188,7 @@ def cmd_update(args):
 
     orch = _get_orchestrator()
     orch.update_status(args.job_id, args.status, args.notes or "")
-    print(f"  Updated: {args.job_id} → {args.status}")
+    print(f"  Updated: {args.job_id} -> {args.status}")
 
 
 def cmd_followup(args):
@@ -274,6 +274,8 @@ Examples:
     # single
     p_single = sub.add_parser("single", help="Process a single job URL")
     p_single.add_argument("--url", required=True, help="Job listing URL")
+    p_single.add_argument("--force", action="store_true",
+                          help="Tailor regardless of match score (bypass threshold)")
 
     # status
     p_status = sub.add_parser("status", help="Show stats dashboard")

@@ -243,6 +243,51 @@ class ScraperAgent:
             print(f"[Scraper] Playwright failed for {url}: {e}")
             return None
 
+    # ── LinkedIn-specific scraper ──────────────────────────────────────────
+
+    def _scrape_linkedin(self, url: str) -> Optional[dict]:
+        """
+        Run the async multi-strategy LinkedIn scraper synchronously.
+        Bypasses the login wall that blocks unauthenticated requests.
+        """
+        import asyncio
+        try:
+            from agents.scrapers.linkedin_scraper import LinkedInScraper
+        except ImportError:
+            print("[Scraper] linkedin_scraper module not found, falling back to generic")
+            return self._scrape_with_requests(url, "linkedin.com")
+
+        li = LinkedInScraper()
+        loop = asyncio.new_event_loop()
+        try:
+            result = loop.run_until_complete(li.scrape(url))
+            raw_text = result["raw_text"]
+
+            # Extract title/company from the structured text the LinkedIn scraper produces
+            title = ""
+            company = ""
+            location = ""
+            for line in raw_text.split("\n"):
+                line_s = line.strip()
+                if line_s.lower().startswith("job title:"):
+                    title = line_s.split(":", 1)[1].strip()
+                elif line_s.lower().startswith("company:"):
+                    company = line_s.split(":", 1)[1].strip()
+                elif line_s.lower().startswith("location:"):
+                    location = line_s.split(":", 1)[1].strip()
+
+            return {
+                "title": title,
+                "company": company,
+                "location": location,
+                "raw_description": raw_text,
+            }
+        except Exception as e:
+            print(f"[Scraper] LinkedIn scraper failed: {e}")
+            return None
+        finally:
+            loop.close()
+
     # ── Main Entry Point ───────────────────────────────────────────────────
 
     def scrape(self, url: str) -> Optional[JobDescription]:
@@ -256,11 +301,15 @@ class ScraperAgent:
         print(f"[Scraper] Processing: {url[:80]}  (platform={platform})")
         time.sleep(self.rate_limit)
 
-        # Try requests first (fast); fall back to Playwright
-        raw = self._scrape_with_requests(url, platform)
-        if (not raw or not raw.get("raw_description")) and self.use_playwright:
-            print(f"[Scraper] Falling back to Playwright for {url[:60]}")
-            raw = self._scrape_with_playwright(url, platform)
+        # LinkedIn requires auth bypass; use dedicated multi-strategy scraper
+        if platform == "linkedin.com":
+            raw = self._scrape_linkedin(url)
+        else:
+            # Try requests first (fast); fall back to Playwright
+            raw = self._scrape_with_requests(url, platform)
+            if (not raw or not raw.get("raw_description")) and self.use_playwright:
+                print(f"[Scraper] Falling back to Playwright for {url[:60]}")
+                raw = self._scrape_with_playwright(url, platform)
 
         if not raw or not raw.get("raw_description"):
             print(f"[Scraper] Failed to extract content from {url}")
@@ -276,9 +325,9 @@ class ScraperAgent:
         jd = JobDescription(
             url=url,
             job_id=job_id,
-            title=raw.get("title") or parsed.get("title", "Unknown Role"),
-            company=raw.get("company") or "Unknown Company",
-            location=raw.get("location") or "Not specified",
+            title=raw.get("title") or parsed.get("title") or "Unknown Role",
+            company=raw.get("company") or parsed.get("company") or "Unknown Company",
+            location=raw.get("location") or parsed.get("location") or "Not specified",
             salary_range=extract_salary_from_text(raw_text) or parsed.get("salary_info"),
             job_type=self._infer_job_type(raw_text),
             experience_level=extract_experience_level(raw_text),

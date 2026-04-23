@@ -12,6 +12,9 @@ EXTRACTION_PROMPT = """Analyze this job description and extract structured data.
 Return ONLY valid JSON with these exact fields (no markdown, no extra text):
 
 {
+  "title": "exact job title from the posting",
+  "company": "company name",
+  "location": "job location",
   "responsibilities": ["list of key responsibilities"],
   "requirements": ["list of required qualifications"],
   "nice_to_haves": ["list of preferred/bonus qualifications"],

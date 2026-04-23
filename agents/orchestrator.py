@@ -49,10 +49,11 @@ class Orchestrator:
 
     # ── Core Pipeline ─────────────────────────────────────────────────────────
 
-    def _process_single(self, url: str, stats: dict) -> str:
+    def _process_single(self, url: str, stats: dict, force: bool = False) -> str:
         """
         Full pipeline for one URL.
         Returns one of: 'tailored', 'review', 'skipped', 'error'
+        force=True bypasses the score threshold and always tailors.
         """
         # 1. Scrape
         jd = self.scraper.scrape(url)
@@ -70,21 +71,24 @@ class Orchestrator:
         score = self.scorer.score(jd)
         decision = get_decision(score)
 
-        if decision == "skip":
-            print(f"[Orchestrator] SKIP  {jd.company} — {jd.title}  (score={score:.1f})")
-            db_manager.log_skip(jd, reason=f"Low match score: {score:.1f}")
-            db_manager.upsert_daily_stats(
-                date=datetime.now().strftime("%Y-%m-%d"),
-                skipped=1,
-            )
-            stats["skipped"] += 1
-            return "skipped"
+        if not force:
+            if decision == "skip":
+                print(f"[Orchestrator] SKIP  {jd.company} — {jd.title}  (score={score:.1f})")
+                db_manager.log_skip(jd, reason=f"Low match score: {score:.1f}")
+                db_manager.upsert_daily_stats(
+                    date=datetime.now().strftime("%Y-%m-%d"),
+                    skipped=1,
+                )
+                stats["skipped"] += 1
+                return "skipped"
 
-        if decision == "review":
-            print(f"[Orchestrator] REVIEW {jd.company} — {jd.title}  (score={score:.1f})")
-            db_manager.log_review(jd)
-            stats["review"] += 1
-            return "review"
+            if decision == "review":
+                print(f"[Orchestrator] REVIEW {jd.company} — {jd.title}  (score={score:.1f})")
+                db_manager.log_review(jd)
+                stats["review"] += 1
+                return "review"
+        else:
+            print(f"[Orchestrator] FORCE-TAILOR {jd.company} — {jd.title}  (score={score:.1f})")
 
         # 3. Tailor resume
         output_dir = self._output_dir(jd)
@@ -187,10 +191,10 @@ class Orchestrator:
         self._write_csv_report(stats)
         return stats
 
-    def run_single(self, url: str) -> str:
-        """Process a single URL interactively. Returns outcome string."""
+    def run_single(self, url: str, force: bool = False) -> str:
+        """Process a single URL. force=True tailors regardless of score."""
         stats = {"tailored": 0, "review": 0, "skipped": 0, "errors": 0}
-        result = self._process_single(url, stats)
+        result = self._process_single(url, stats, force=force)
         print(f"\n[Orchestrator] Result: {result.upper()}")
         return result
 

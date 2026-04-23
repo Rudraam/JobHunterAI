@@ -28,6 +28,9 @@ def find_pdflatex() -> str:
         r"C:\Program Files\MiKTeX 2.9\miktex\bin\x64\pdflatex.exe",
         r"C:\texlive\2023\bin\windows\pdflatex.exe",
         r"C:\texlive\2024\bin\windows\pdflatex.exe",
+        # MiKTeX user-level install (Windows)
+        os.path.join(os.environ.get("LOCALAPPDATA", ""), "Programs", "MiKTeX", "miktex", "bin", "x64", "pdflatex.exe"),
+        os.path.join(os.environ.get("USERPROFILE", ""), "AppData", "Local", "Programs", "MiKTeX", "miktex", "bin", "x64", "pdflatex.exe"),
     ]
     for c in candidates:
         if os.path.isfile(c):
@@ -72,7 +75,7 @@ def compile_latex(tex_path: str, output_dir: Optional[str] = None,
             ],
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=300,  # 5 min: first run installs MiKTeX packages on-the-fly
         )
         if result.returncode != 0:
             # Extract the meaningful error lines from pdflatex output

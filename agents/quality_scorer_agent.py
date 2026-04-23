@@ -60,7 +60,7 @@ def _score_keyword_match(jd) -> float:
 
     jd_skills = set(s.lower() for s in jd.required_skills + jd.tools_mentioned)
     if not jd_skills:
-        return 75.0  # no explicit skills listed → neutral score
+        return 75.0  # no explicit skills listed -> neutral score
 
     matched = jd_skills & approved_lower
     score = len(matched) / len(jd_skills) * 100
@@ -110,7 +110,7 @@ def _score_skill_coverage(jd) -> float:
     required = set(s.lower() for s in jd.required_skills)
 
     if not required:
-        return 70.0  # can't assess → neutral
+        return 70.0  # can't assess -> neutral
 
     matched = required & all_approved
     return len(matched) / len(required) * 100
@@ -144,7 +144,7 @@ def _score_salary_alignment(jd) -> float:
     """Check if JD salary aligns with Rudra's target ($100K–$125K CAD)."""
     salary = (jd.salary_range or "").lower()
     if not salary or salary in ("not mentioned", ""):
-        return 60.0  # unknown → neutral
+        return 60.0  # unknown -> neutral
 
     # Extract numbers from salary string
     nums = re.findall(r"\d[\d,]*", salary.replace(",", ""))
@@ -253,7 +253,7 @@ class QualityScorerAgent:
             w = SCORING_WEIGHTS[k]
             print(f"  {k:<25} {v:>5.1f}%   {v*w:>7.1f}")
         print(f"  Positive signal bonus:         +{bonus:.1f}")
-        print(f"  {'FINAL SCORE':<25} {final:>5.1f}  → {jd.priority.upper()}")
+        print(f"  {'FINAL SCORE':<25} {final:>5.1f}  -> {jd.priority.upper()}")
 
 
 def _assign_priority(score: float, components: dict, jd) -> str:

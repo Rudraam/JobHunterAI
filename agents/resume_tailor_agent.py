@@ -103,8 +103,8 @@ PROJECTS:
    conversation system. Multi-step reasoning and planning.
 
 EDUCATION:
-- BCA Data Science, Chandigarh University (2025–Present, online)
-- Advanced Diploma in Computer Programming and Analysis, Canada (Sept 2023 – Apr 2026)
+- Advanced Diploma in Computer Programming and Analysis, George Brown College -- Casa Loma Campus, Toronto, ON (Sep 2023 – Apr 2026)
+- Bachelor of Computer Applications (BCA) in Data Science, Chandigarh University, India (Jul 2025 – Present, online)
 
 APPROVED SKILL POOL (inject ONLY from this list — never add skills not listed here):
 Languages: Python, TypeScript, JavaScript, Java, Go, SQL, Bash, C++
@@ -342,9 +342,12 @@ class ResumeTailorAgent:
             rf"(?:\s*\{{[^}}]*\}})*\s*)"
             rf"(\\resumeItemListStart.*?\\resumeItemListEnd)"
         )
-        replacement = r"\1" + new_bullets_latex
+
+        def replacer(m):
+            return m.group(1) + new_bullets_latex
+
         new_tex, count = re.subn(
-            pattern, replacement, tex, flags=re.DOTALL | re.IGNORECASE
+            pattern, replacer, tex, flags=re.DOTALL | re.IGNORECASE
         )
         if count == 0:
             print(f"[Tailor] Warning: company block '{company_keyword}' not found")
@@ -379,6 +382,52 @@ class ResumeTailorAgent:
 
     # ── LLM Calls ─────────────────────────────────────────────────────────
 
+    def _restore_latex_backslashes(self, obj):
+        """
+        Fix LaTeX commands corrupted by JSON escape sequence parsing.
+
+        When the LLM emits single backslashes in JSON, json.loads() interprets
+        certain sequences as control characters, eating the letter:
+          \r → CR (0x0D)  — destroys \resumeItem, \renewcommand
+          \t → TAB (0x09) — destroys \textbf, \textit, \textasciitilde
+          \b → BS (0x08)  — destroys \begin, \bfseries
+          \f → FF (0x0C)  — destroys \fill
+          \n → LF (0x0A)  — destroys \newcommand, \noindent
+          \v → VT (0x0B)  — destroys \vspace, \vcenter
+
+        We detect control-char + known suffix and restore the full command.
+        """
+        if isinstance(obj, str):
+            # CR (\r=0x0D) ate 'r': restore \r + esum → \resum, etc.
+            obj = obj.replace('\x0Desum', '\\resum')
+            obj = obj.replace('\x0Denew', '\\renew')
+            # TAB (\t=0x09) ate 't': restore
+            obj = obj.replace('\x09ext', '\\text')
+            obj = obj.replace('\x09it', '\\tit')
+            obj = obj.replace('\x09ab', '\\tab')
+            # BS (\b=0x08) ate 'b': restore
+            obj = obj.replace('\x08egin', '\\begin')
+            obj = obj.replace('\x08f', '\\bf')
+            # FF (\f=0x0C) ate 'f': restore
+            obj = obj.replace('\x0Cill', '\\fill')
+            obj = obj.replace('\x0Canc', '\\fanc')
+            # LF (\n=0x0A) ate 'n': restore
+            obj = obj.replace('\x0Aoindent', '\\noindent')
+            obj = obj.replace('\x0Aewc', '\\newc')
+            obj = obj.replace('\x0Aewl', '\\newl')
+            # VT (\v=0x0B) ate 'v': restore
+            obj = obj.replace('\x0Bspace', '\\vspace')
+            obj = obj.replace('\x0Bcenter', '\\vcenter')
+            # Also catch any remaining control chars before letters
+            # (won't recover the eaten letter, but prevents garbage in output)
+            obj = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F](?=[a-zA-Z])', r'\\', obj)
+            return obj
+        if isinstance(obj, dict):
+            return {k: self._restore_latex_backslashes(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [self._restore_latex_backslashes(v) for v in obj]
+        return obj
+
     def _call_llm(self, prompt: str, purpose: str) -> Optional[dict]:
         """Generic LLM call that returns parsed JSON or None on failure."""
         if not self.api_key:
@@ -394,7 +443,9 @@ class ResumeTailorAgent:
             content = message.content[0].text.strip()
             content = re.sub(r"^```(?:json)?\s*", "", content)
             content = re.sub(r"\s*```$", "", content)
-            return json.loads(content)
+
+            parsed = json.loads(content)
+            return self._restore_latex_backslashes(parsed)
         except json.JSONDecodeError as e:
             print(f"[Tailor] JSON parse error in {purpose}: {e}")
             return None

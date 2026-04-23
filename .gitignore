@@ -85,10 +85,8 @@ data/job_cache.json
 data/*.sqlite
 data/*.sqlite-journal
 
-# Generated outputs
-outputs/resumes/
-outputs/cover_letters/
-outputs/reports/
+# Generated outputs (company/role/date subdirs created by the pipeline)
+outputs/*/
 outputs/*.pdf
 outputs/*.zip
 
